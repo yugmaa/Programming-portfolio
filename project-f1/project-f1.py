@@ -1,4 +1,7 @@
 import sys
+import os
+from tabulate import tabulate
+import textwrap
 
 def data_storage(file_lines):
     location= file_lines[0].strip()  #extracts the first element of the list where the location is stored
@@ -37,6 +40,51 @@ def computation(driver_info):
             fast_driver= driv
     return average_time,fastest_time,overall_average,fast_driver
 
+def result(location,f1_driver_data,average_time,fastest_time,overall_average,fast_driver):
+    os.system('cls')
+    print(f"\t\t\t\t\t\t\tWELCOME TO {location.upper()} GRAND PRIX")
+
+    # displays the current fastest driver in the given location
+    print(f"\n\t\t\t\t\t\tCurrent Fastest Driver in {location} grand prix")
+    row = [[f1_driver_data[fast_driver][0],fast_driver, f1_driver_data[fast_driver][1],f1_driver_data[fast_driver][2], fastest_time[fast_driver]]]
+    headers = ["Driver number","Driver code","Driver name","Team","Fastest Time"]
+    table1 = tabulate(row, headers = headers, tablefmt="simple_grid", colalign=("center", "center", "center", "center", "center"))
+    indented_table1 = textwrap.indent(table1, "\t\t\t\t")
+    print(indented_table1)
+
+    # displays the fastest time recorded by each driver
+    print(f"\n\t\t\t\t\t\tFastest time for each driver in {location} grand prix")
+    rows1 = []
+    for data in fastest_time.keys():
+        line = [f1_driver_data[data][0], data, f1_driver_data[data][1], f1_driver_data[data][2], fastest_time[data]]
+        rows1.append(line)
+    headers = ["Driver number", "Driver code", "Driver name", "Team", "Fastest Time"]
+    table2 = tabulate(rows1, headers = headers, tablefmt="simple_grid", colalign=("center", "center", "center", "center", "center"))
+    indented_table2 = textwrap.indent(table2, "\t\t\t")
+    print(indented_table2)
+
+    # displays the average time of each driver 
+    print(f"\n\t\t\t\t\t\tAverage time for each driver in {location} grand prix")
+    rows2 = []
+    for data in average_time.keys():
+        line = [f1_driver_data[data][0], data, f1_driver_data[data][1], f1_driver_data[data][2], average_time[data]]
+        rows2.append(line)
+    headers = ["Driver number", "Driver code", "Driver name", "Team", "Average Time"]
+    table3 = tabulate(rows2, headers = headers, tablefmt="simple_grid", colalign=("center", "center", "center", "center", "center"))
+    indented_table3 = textwrap.indent(table3, "\t\t\t")
+    print(indented_table3)
+
+    #displays overall average time
+    print (f"\n\t\t\t\t\tOverall Average Time considering all drivers = {overall_average}")
+        
+    # displays the fastest time recorded by each driver in descending order
+    print(f"\n\t\t\t\t\tFastest time of drivers at {location} grand prix in descending order")
+    sorted_data = sorted(rows1, key=lambda row: row[4], reverse=True)
+    headers = ["Driver number","Driver code","Driver name","Team","Fastest Time"]
+    table4 = tabulate(sorted_data, headers = headers, tablefmt="simple_grid", colalign=("center", "center", "center", "center", "center"))
+    indented_table4 = textwrap.indent(table4, "\t\t\t")
+    print(indented_table4)
+
 def main():
     if len(sys.argv)<2:  #checks if enough argument is passed
         print(f"Error! not enough argument.")
@@ -54,6 +102,7 @@ def main():
     location,driver_info=data_storage(file_read)
     f1_driver_data= driver_data(f1_driver_read)
     average_time,fastest_time,overall_average,fast_driver=computation(driver_info)
+    result(location,f1_driver_data,average_time,fastest_time,overall_average,fast_driver)
 
 if __name__=="__main__":
     main() 
