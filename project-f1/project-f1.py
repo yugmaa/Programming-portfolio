@@ -10,6 +10,27 @@ def data_storage(file_lines):
         lap_time.append(driver_time)  #adds new lap time to the list value
     return location,driver_info
 
+def driver_data(f1_driver_read):
+    f1_driver_data={}
+    for items in f1_driver_read:
+        items=items.strip()
+        number,driver_code,driver_name,team=items.split(",")  #splits the data separated by "," stores them into individual variables
+        f1_driver_data[driver_code]=[number,driver_name,team]
+    return f1_driver_data
+
+def computation(driver_info):
+    average_time={}
+    fastest_time={}
+    overall_sum=0
+    count=0
+    min_time= float('inf')
+    fast_driver= None
+    for driver,time_list in driver_info.items():
+        fastest_time[driver]=min(time_list)  #dictionary containing fastest time for each driver
+        average_time[driver]= sum(time_list)/len(time_list)  #dictionary containing average time for each driver
+        overall_sum=overall_sum+sum(time_list)
+        count= count+len(time_list)
+
 def main():
     if len(sys.argv)<2:  #checks if enough argument is passed
         print(f"Error! not enough argument.")
@@ -25,6 +46,8 @@ def main():
         print(f"Error! File does not exist.")
         sys.exit()
     location,driver_info=data_storage(file_read)
+    f1_driver_data= driver_data(f1_driver_read)
+    computation(driver_info)
 
 if __name__=="__main__":
     main() 
