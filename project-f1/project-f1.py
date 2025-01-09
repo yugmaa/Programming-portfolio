@@ -30,6 +30,12 @@ def computation(driver_info):
         average_time[driver]= sum(time_list)/len(time_list)  #dictionary containing average time for each driver
         overall_sum=overall_sum+sum(time_list)
         count= count+len(time_list)
+    overall_average= overall_sum/count  #contains the average time for all the drivers
+    for driv,fast_time in fastest_time.items():  #iteration to determine the fastest driver from the overall data
+        if fast_time<min_time:
+            min_time=fast_time
+            fast_driver= driv
+    return average_time,fastest_time,overall_average,fast_driver
 
 def main():
     if len(sys.argv)<2:  #checks if enough argument is passed
@@ -47,7 +53,7 @@ def main():
         sys.exit()
     location,driver_info=data_storage(file_read)
     f1_driver_data= driver_data(f1_driver_read)
-    computation(driver_info)
+    average_time,fastest_time,overall_average,fast_driver=computation(driver_info)
 
 if __name__=="__main__":
     main() 
